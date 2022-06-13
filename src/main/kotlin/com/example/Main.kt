@@ -23,4 +23,6 @@ suspend fun main() {
 
     val response = apolloClient.query(LaunchListQuery()).execute()
     println(response.toFormattedString())
+
+    apolloClient.dispose()
 }
