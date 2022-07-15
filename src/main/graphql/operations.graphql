@@ -1,14 +1,3 @@
-query LaunchList {
-    launches {
-        cursor
-        hasMore
-        launches {
-            id
-            site
-            mission {
-                name
-                missionPatch(size: SMALL)
-            }
-        }
-    }
+query MyQuery {
+    long
 }
