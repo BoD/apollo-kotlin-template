@@ -9,15 +9,16 @@ version = "1.0.0-SNAPSHOT"
 
 allprojects {
     repositories {
-//        mavenLocal()
+        mavenLocal()
         google()
         mavenCentral()
     }
 }
 
-
 dependencies {
-    implementation("com.apollographql.apollo3", "apollo-runtime", "3.3.0")
+    implementation("com.apollographql.apollo3", "apollo-runtime")
+    implementation("com.apollographql.apollo3", "apollo-normalized-cache")
+    implementation("com.apollographql.apollo3", "apollo-normalized-cache-sqlite")
 }
 
 apollo {

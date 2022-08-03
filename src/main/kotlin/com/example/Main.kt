@@ -1,6 +1,12 @@
 package com.example
 
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.api.MemoryCacheFactory
+import com.apollographql.apollo3.cache.normalized.apolloStore
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
+import com.apollographql.apollo3.cache.normalized.normalizedCache
+import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo3.network.okHttpClient
 import okhttp3.OkHttpClient
 import java.net.InetSocketAddress
@@ -9,8 +15,12 @@ import java.net.Proxy
 private const val USE_PROXY = false
 
 suspend fun main() {
+    val memoryFirstThenSqlCacheFactory = MemoryCacheFactory(10 * 1024 * 1024)
+        .chain(SqlNormalizedCacheFactory("jdbc:sqlite:apollo.db"))
+
     val apolloClient = ApolloClient.Builder()
         .serverUrl("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
+        .normalizedCache(memoryFirstThenSqlCacheFactory)
         .apply {
             if (USE_PROXY) okHttpClient(
                 OkHttpClient.Builder()
@@ -21,8 +31,16 @@ suspend fun main() {
         }
         .build()
 
-    val response = apolloClient.query(LaunchListQuery()).execute()
+    // Start with a fresh cache
+    apolloClient.apolloStore.clearAll()
+
+    // Fetch the data from the network
+    var response = apolloClient.query(LaunchListQuery()).execute()
     println(response.toFormattedString())
 
-    apolloClient.dispose()
+    // Now it should be cached
+    response = apolloClient.query(LaunchListQuery()).fetchPolicy(FetchPolicy.CacheOnly).execute()
+    println(response.toFormattedString())
+
+    apolloClient.close()
 }
