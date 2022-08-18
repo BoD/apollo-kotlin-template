@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.7.0"
-    id("com.apollographql.apollo3") version "3.3.0"
+    kotlin("jvm") version "1.7.10"
+    id("com.apollographql.apollo3") version "3.5.0"
     application
 }
 
@@ -23,11 +23,17 @@ dependencies {
 
 apollo {
     packageName.set("com.example")
+
+    introspection {
+        endpointUrl.set("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
+        schemaFile.set(file("src/main/graphql/schema.graphqls"))
+    }
 }
 
 application {
     mainClass.set("com.example.MainKt")
 }
 
+// `./gradlew downloadServiceApolloSchemaFromIntrospection` or
 // `./gradlew downloadApolloSchema --endpoint='https://apollo-fullstack-tutorial.herokuapp.com/graphql' --schema=`pwd`/src/main/graphql/schema.graphqls` to download the schema
 // `./gradlew run` to run the app
