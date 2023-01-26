@@ -1,45 +1,54 @@
 package com.example
 
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
-import com.apollographql.apollo3.cache.normalized.api.MemoryCacheFactory
-import com.apollographql.apollo3.cache.normalized.apolloStore
-import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.normalizedCache
-import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo3.network.okHttpClient
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import java.net.InetSocketAddress
 import java.net.Proxy
 
-private const val USE_PROXY = false
-
 suspend fun main() {
-    val memoryFirstThenSqlCacheFactory = MemoryCacheFactory(10 * 1024 * 1024)
-        .chain(SqlNormalizedCacheFactory("jdbc:sqlite:apollo.db"))
-
-    val apolloClient = ApolloClient.Builder()
-        .serverUrl("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
-        .normalizedCache(memoryFirstThenSqlCacheFactory)
-        .apply {
-            if (USE_PROXY) okHttpClient(
-                OkHttpClient.Builder()
-                    .proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress("localhost", 8888)))
-                    .ignoreAllSSLErrors()
-                    .build()
-            )
-        }
+    // Shared OkHttp
+    val okHttpClient = OkHttpClient.Builder()
+        .proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress("localhost", 8888)))
+        .ignoreAllSSLErrors()
         .build()
 
-    // Start with a fresh cache
-    apolloClient.apolloStore.clearAll()
 
-    // Fetch the data from the network
+    // 1st client
+    var apolloClient = ApolloClient.Builder()
+        .serverUrl("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
+        .webSocketServerUrl("wss://apollo-fullstack-tutorial.herokuapp.com/graphql")
+        .okHttpClient(okHttpClient)
+        .build()
+
+    // A query
     var response = apolloClient.query(LaunchListQuery()).execute()
     println(response.toFormattedString())
 
-    // Now it should be cached
-    response = apolloClient.query(LaunchListQuery()).fetchPolicy(FetchPolicy.CacheOnly).execute()
+    // A subscription
+    GlobalScope.launch {
+        apolloClient.subscription(TripsBookedSubscription()).toFlow().collect { resp ->
+            println(resp.toFormattedString())
+        }
+    }
+
+    // Simulate other activity in the app...
+    Thread.sleep(3000)
+
+    apolloClient.close()
+
+
+    // 2nd client
+    apolloClient = ApolloClient.Builder()
+        .serverUrl("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
+        .webSocketServerUrl("wss://apollo-fullstack-tutorial.herokuapp.com/graphql")
+        .okHttpClient(okHttpClient)
+        .build()
+
+    // Fetch again
+    response = apolloClient.query(LaunchListQuery()).execute()
     println(response.toFormattedString())
 
     apolloClient.close()

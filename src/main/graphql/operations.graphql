@@ -5,10 +5,18 @@ query LaunchList {
         launches {
             id
             site
-            mission {
-                name
-                missionPatch(size: SMALL)
-            }
+            ... missionFragment
         }
     }
+}
+
+fragment missionFragment on Launch {
+    mission {
+        name
+        missionPatch ( size: SMALL)
+    }
+}
+
+subscription TripsBooked {
+    tripsBooked
 }

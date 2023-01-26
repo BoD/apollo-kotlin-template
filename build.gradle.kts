@@ -19,6 +19,8 @@ dependencies {
     implementation("com.apollographql.apollo3", "apollo-runtime")
     implementation("com.apollographql.apollo3", "apollo-normalized-cache")
     implementation("com.apollographql.apollo3", "apollo-normalized-cache-sqlite")
+
+
 }
 
 apollo {
@@ -28,6 +30,8 @@ apollo {
         endpointUrl.set("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
         schemaFile.set(file("src/main/graphql/schema.graphqls"))
     }
+
+    generateOperationOutput.set(true)
 }
 
 application {
