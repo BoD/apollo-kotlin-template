@@ -21,6 +21,7 @@ suspend fun main() {
         .serverUrl("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
         .webSocketServerUrl("wss://apollo-fullstack-tutorial.herokuapp.com/graphql")
         .okHttpClient(okHttpClient)
+        .httpBatching()
         .build()
 
     // A query
@@ -45,6 +46,7 @@ suspend fun main() {
         .serverUrl("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
         .webSocketServerUrl("wss://apollo-fullstack-tutorial.herokuapp.com/graphql")
         .okHttpClient(okHttpClient)
+        .httpBatching()
         .build()
 
     // Fetch again
