@@ -1,46 +1,59 @@
+@file:OptIn(ApolloExperimental::class, ApolloInternal::class)
+
 package com.example
 
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.annotations.ApolloExperimental
+import com.apollographql.apollo3.annotations.ApolloInternal
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.api.MemoryCacheFactory
-import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.normalizedCache
-import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
-import com.apollographql.apollo3.network.okHttpClient
-import okhttp3.OkHttpClient
-import java.net.InetSocketAddress
-import java.net.Proxy
+import com.apollographql.apollo3.cache.normalized.watch
+import com.apollographql.apollo3.mockserver.MockServer
+import com.apollographql.apollo3.mockserver.enqueue
+import com.apollographql.apollo3.testing.internal.runTest
+import kotlinx.coroutines.launch
 
-private const val USE_PROXY = false
-
-suspend fun main() {
-    val memoryFirstThenSqlCacheFactory = MemoryCacheFactory(10 * 1024 * 1024)
-        .chain(SqlNormalizedCacheFactory("jdbc:sqlite:apollo.db"))
-
+suspend fun main() = runTest {
+    val mockServer = MockServer()
     val apolloClient = ApolloClient.Builder()
-        .serverUrl("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
-        .normalizedCache(memoryFirstThenSqlCacheFactory)
-        .apply {
-            if (USE_PROXY) okHttpClient(
-                OkHttpClient.Builder()
-                    .proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress("localhost", 8888)))
-                    .ignoreAllSSLErrors()
-                    .build()
-            )
-        }
+        .serverUrl(mockServer.url())
+        .normalizedCache(MemoryCacheFactory())
         .build()
 
-    // Start with a fresh cache
-    apolloClient.apolloStore.clearAll()
+    launch {
+        apolloClient.query(CacheMiss2Query()).fetchPolicy(FetchPolicy.CacheOnly).watch().collect {
+            println("watch: ${it.dataAssertNoErrors}")
+        }
+    }
 
-    // Fetch the data from the network
-    var response = apolloClient.query(LaunchListQuery()).execute()
-    println(response.toFormattedString())
+    println("Execute CacheMiss2Query")
+    mockServer.enqueue(
+        """
+        {
+          "data": {
+            "query1": {"a": "a"},
+            "query2": null,
+            "query3": {"a": "a"},
+            "query4": {"a": "a"}
+          }
+        }
+      """.trimIndent()
+    )
+    apolloClient.query(CacheMiss2Query()).fetchPolicy(FetchPolicy.NetworkOnly).execute()
 
-    // Now it should be cached
-    response = apolloClient.query(LaunchListQuery()).fetchPolicy(FetchPolicy.CacheOnly).execute()
-    println(response.toFormattedString())
+    println("Execute CacheHit2Query")
+    mockServer.enqueue(
+        """
+        {
+          "data": {
+            "query2": {"a": "a"}
+          }
+        }
+      """.trimIndent()
+    )
+    apolloClient.query(CacheHit2Query()).fetchPolicy(FetchPolicy.NetworkOnly).execute()
 
-    apolloClient.close()
+
 }

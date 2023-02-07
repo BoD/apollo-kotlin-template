@@ -1,25 +1,27 @@
-query LaunchList {
-    launches {
-        cursor
-        hasMore
-        launches {
-            id
-            site
-            mission {
-                name
-                missionPatch(size: SMALL)
-            }
-        }
+query CacheMiss2Query {
+    query1 {
+        a
+    }
+    query2 {
+        a
+    }
+    query3 {
+        a
+    }
+    query4 {
+        a
     }
 }
 
-
-mutation login {
-    login(email: "a@a.com") {
-        id
+query CacheHit2Query {
+    query2 {
+        a
     }
 }
 
-subscription TripsBooked {
-    tripsBooked
+query CacheHit3Query {
+    query3 {
+        a
+    }
 }
+
