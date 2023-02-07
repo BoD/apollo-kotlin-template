@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.8.10"
     id("com.apollographql.apollo3") version "3.7.4"
     application
 }
@@ -22,11 +22,13 @@ dependencies {
 }
 
 apollo {
-    packageName.set("com.example")
+    service("main") {
+        packageName.set("com.example")
 
-    introspection {
-        endpointUrl.set("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
-        schemaFile.set(file("src/main/graphql/schema.graphqls"))
+        introspection {
+            endpointUrl.set("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
+            schemaFile.set(file("src/main/graphql/schema.graphqls"))
+        }
     }
 }
 

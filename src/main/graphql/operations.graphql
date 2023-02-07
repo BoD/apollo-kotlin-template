@@ -12,3 +12,14 @@ query LaunchList {
         }
     }
 }
+
+
+mutation login {
+    login(email: "a@a.com") {
+        id
+    }
+}
+
+subscription TripsBooked {
+    tripsBooked
+}
