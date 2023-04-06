@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.7.0"
-  id("com.apollographql.apollo3") version "3.7.4"
+    id("com.apollographql.apollo3") version "3.8.0"
     application
 }
 
@@ -9,10 +9,6 @@ version = "1.0.0-SNAPSHOT"
 
 allprojects {
     repositories {
-//        mavenLocal()
-        maven {
-            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-        }
         google()
         mavenCentral()
     }
@@ -20,7 +16,7 @@ allprojects {
 
 
 dependencies {
-  implementation("com.apollographql.apollo3", "apollo-runtime")
+    implementation("com.apollographql.apollo3", "apollo-runtime")
 }
 
 apollo {
