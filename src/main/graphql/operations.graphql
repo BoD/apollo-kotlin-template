@@ -23,3 +23,17 @@ mutation login {
 subscription TripsBooked {
     tripsBooked
 }
+
+mutation SetMessage($message: String) {
+    setMessage(message: $message) {
+        id
+        message
+    }
+}
+
+query GetMessage {
+    message {
+        id
+        message
+    }
+}

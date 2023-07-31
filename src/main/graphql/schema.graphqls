@@ -6,6 +6,8 @@ type Query {
   me: User
 
   totalTripsBooked: Int
+
+  message: Message
 }
 
 """
@@ -71,6 +73,13 @@ type Mutation {
   cancelTrip(launchId: ID!): TripUpdateResponse!
 
   login(email: String): User
+
+  setMessage(message: String) : Message
+}
+
+type Message {
+  id: ID!
+  message: String
 }
 
 type TripUpdateResponse {

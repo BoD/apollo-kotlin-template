@@ -19,6 +19,11 @@ dependencies {
     implementation("com.apollographql.apollo3", "apollo-runtime")
     implementation("com.apollographql.apollo3", "apollo-normalized-cache")
     implementation("com.apollographql.apollo3", "apollo-normalized-cache-sqlite")
+
+    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.7.3")
+    testImplementation("com.apollographql.apollo3", "apollo-mockserver")
+    testImplementation("com.apollographql.apollo3", "apollo-testing-support")
 }
 
 apollo {
