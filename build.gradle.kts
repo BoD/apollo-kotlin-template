@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.8.10"
-    id("com.apollographql.apollo3") version "3.8.0"
+    id("com.apollographql.apollo3") version "3.8.2"
     application
 }
 
@@ -34,6 +34,8 @@ apollo {
             endpointUrl.set("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
             schemaFile.set(file("src/main/graphql/schema.graphqls"))
         }
+
+        generateOperationOutput.set(true)
     }
 }
 

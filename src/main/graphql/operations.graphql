@@ -3,16 +3,19 @@ query LaunchList {
         cursor
         hasMore
         launches {
-            id
-            site
-            mission {
-                name
-                missionPatch(size: SMALL)
-            }
+            ...launch
         }
     }
 }
 
+fragment launch on Launch {
+    id
+    site
+    mission {
+        name
+        missionPatch(size: SMALL)
+    }
+}
 
 mutation login {
     login(email: "a@a.com") {
