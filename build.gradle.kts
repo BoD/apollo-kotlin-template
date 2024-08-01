@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.8.10"
-    id("com.apollographql.apollo3") version "3.8.2"
+    kotlin("jvm") version "2.0.0"
+    id("com.apollographql.apollo") version "4.0.0"
     application
 }
 
@@ -16,14 +16,15 @@ allprojects {
 }
 
 dependencies {
-    implementation("com.apollographql.apollo3", "apollo-runtime")
-    implementation("com.apollographql.apollo3", "apollo-normalized-cache")
-    implementation("com.apollographql.apollo3", "apollo-normalized-cache-sqlite")
+    implementation("com.apollographql.apollo", "apollo-runtime")
+    implementation("com.apollographql.apollo", "apollo-normalized-cache")
+    implementation("com.apollographql.apollo", "apollo-normalized-cache-sqlite")
+    implementation("com.apollographql.apollo", "apollo-http-cache")
 
     testImplementation(kotlin("test"))
     testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.7.3")
-    testImplementation("com.apollographql.apollo3", "apollo-mockserver")
-    testImplementation("com.apollographql.apollo3", "apollo-testing-support")
+    testImplementation("com.apollographql.apollo", "apollo-mockserver")
+    testImplementation("com.apollographql.apollo", "apollo-testing-support")
 }
 
 apollo {
@@ -36,6 +37,9 @@ apollo {
         }
 
         generateOperationOutput.set(true)
+        generateFragmentImplementations.set(true)
+        generateSchema.set(true)
+        generateDataBuilders.set(true)
     }
 }
 
