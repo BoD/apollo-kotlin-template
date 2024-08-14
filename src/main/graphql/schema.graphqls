@@ -23,7 +23,7 @@ type LaunchConnection {
   launches: [Launch]!
 }
 
-type Launch {
+type Launch @MyDirective {
   id: ID!
 
   site: String
