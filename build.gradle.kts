@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.0.0"
-    id("com.apollographql.apollo") version "4.0.0"
+    id("com.apollographql.apollo") version "4.1.0"
     application
 }
 
@@ -23,8 +23,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.7.3")
-    testImplementation("com.apollographql.apollo", "apollo-mockserver")
-    testImplementation("com.apollographql.apollo", "apollo-testing-support")
+    testImplementation("com.apollographql.mockserver", "apollo-mockserver", "0.1.0")
 }
 
 apollo {

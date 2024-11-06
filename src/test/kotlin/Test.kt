@@ -6,8 +6,8 @@ import com.apollographql.apollo.cache.normalized.api.NormalizedCache
 import com.apollographql.apollo.cache.normalized.apolloStore
 import com.apollographql.apollo.cache.normalized.fetchPolicy
 import com.apollographql.apollo.cache.normalized.normalizedCache
-import com.apollographql.apollo.mockserver.MockServer
-import com.apollographql.apollo.mockserver.enqueueString
+import com.apollographql.mockserver.MockServer
+import com.apollographql.mockserver.enqueueString
 import com.example.GetMessageQuery
 import com.example.SetMessageMutation
 import kotlinx.coroutines.test.runTest
