@@ -24,16 +24,16 @@ class Test {
 
     mockServer.enqueueString(
       """
-            {
-              "data": {
-                "setMessage": {
-                  "__typename": "Message",
-                  "id": "0",
-                  "message": "message0"
-                }
-              }
-            }
-            """.trimIndent()
+      {
+        "data": {
+          "setMessage": {
+            "__typename": "Message",
+            "id": "0",
+            "message": "message0"
+          }
+        }
+      }
+      """.trimIndent()
     )
 
     val mutationResponse = apolloClient

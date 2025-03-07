@@ -1,0 +1,6 @@
+projects:
+  main:
+    schema:
+      - src/main/graphql/schema.graphqls
+      - src/main/graphql/extra.graphqls
+    documents: 'src/main/graphql/*.graphql'
