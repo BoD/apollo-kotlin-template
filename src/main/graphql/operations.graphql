@@ -1,42 +1,10 @@
-query LaunchList {
-    launches {
-        cursor
-        hasMore
-        launches {
-            ...launch
+query DeferQuery($language: Language!) {
+    meta {
+        ... on Meta @defer {
+            lastModified
         }
     }
-}
-
-fragment launch on Launch {
-    id
-    site
-    mission {
-        name
-        missionPatch(size: SMALL)
-    }
-}
-
-mutation login {
-    login(email: "a@a.com") {
-        id
-    }
-}
-
-subscription TripsBooked {
-    tripsBooked
-}
-
-mutation SetMessage($message: String) {
-    setMessage(message: $message) {
-        id
-        message
-    }
-}
-
-query GetMessage {
-    message {
-        id
-        message
+    resume(language: $language) {
+        title
     }
 }
