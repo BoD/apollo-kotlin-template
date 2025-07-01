@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.10"
-    id("com.apollographql.apollo") version "4.1.1"
+    id("com.apollographql.apollo") version "4.3.1"
     application
 }
 
@@ -17,9 +17,10 @@ allprojects {
 
 dependencies {
     implementation("com.apollographql.apollo", "apollo-runtime")
-    implementation("com.apollographql.apollo", "apollo-normalized-cache")
-    implementation("com.apollographql.apollo", "apollo-normalized-cache-sqlite")
-    implementation("com.apollographql.apollo", "apollo-http-cache")
+    implementation("com.apollographql.cache:normalized-cache:1.0.0-alpha.3") // Memory cache
+    implementation("com.apollographql.cache:normalized-cache-sqlite:1.0.0-alpha.3") // SQLite cache
+
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.10.2")
 
     testImplementation(kotlin("test"))
     testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.7.3")
@@ -35,10 +36,9 @@ apollo {
             schemaFile.set(file("src/main/graphql/schema.graphqls"))
         }
 
-        generateOperationOutput.set(true)
-        generateFragmentImplementations.set(true)
-        generateSchema.set(true)
-        generateDataBuilders.set(true)
+        plugin("com.apollographql.cache:normalized-cache-apollo-compiler-plugin:1.0.0-alpha.3") {
+            argument("packageName", packageName.get())
+        }
     }
 }
 
@@ -46,6 +46,6 @@ application {
     mainClass.set("com.example.MainKt")
 }
 
-// `./gradlew downloadServiceApolloSchemaFromIntrospection` or
+// `./gradlew downloadMainApolloSchemaFromIntrospection` or
 // `./gradlew downloadApolloSchema --endpoint='https://apollo-fullstack-tutorial.herokuapp.com/graphql' --schema=`pwd`/src/main/graphql/schema.graphqls` to download the schema
 // `./gradlew run` to run the app
