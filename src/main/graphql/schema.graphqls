@@ -7,7 +7,7 @@ type Query {
 
   totalTripsBooked: Int
 
-  message: Message
+  message(id: ID!): Message
 }
 
 """

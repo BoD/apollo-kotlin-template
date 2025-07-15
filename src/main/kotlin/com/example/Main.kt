@@ -1,13 +1,13 @@
 package com.example
 
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.api.MemoryCacheFactory
-import com.apollographql.apollo.cache.normalized.apolloStore
-import com.apollographql.apollo.cache.normalized.fetchPolicy
-import com.apollographql.apollo.cache.normalized.normalizedCache
-import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo.network.okHttpClient
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.memory.MemoryCacheFactory
+import com.apollographql.cache.normalized.sql.SqlNormalizedCacheFactory
+import com.example.cache.Cache.cache
 import okhttp3.OkHttpClient
 import java.net.InetSocketAddress
 import java.net.Proxy
@@ -20,7 +20,7 @@ suspend fun main() {
 
   val apolloClient = ApolloClient.Builder()
     .serverUrl("https://apollo-fullstack-tutorial.herokuapp.com/graphql")
-    .normalizedCache(memoryFirstThenSqlCacheFactory)
+    .cache(memoryFirstThenSqlCacheFactory)
     .apply {
       if (USE_PROXY) okHttpClient(
         OkHttpClient.Builder()

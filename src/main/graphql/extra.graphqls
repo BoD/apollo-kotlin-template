@@ -1,3 +1,13 @@
+extend schema
+@link(
+    url: "https://specs.apollo.dev/kotlin_labs/v0.3",
+    import: ["@typePolicy", "@fieldPolicy"]
+)
+
 extend type Launch @typePolicy(keyFields: "id")
 
 extend type Message @typePolicy(keyFields: "id")
+
+extend type Query
+@fieldPolicy(forField: "launch", keyArgs: "id")
+@fieldPolicy(forField: "message", keyArgs: "id")

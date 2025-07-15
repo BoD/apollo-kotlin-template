@@ -1,17 +1,18 @@
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.apollographql.apollo.cache.normalized.FetchPolicy
-import com.apollographql.apollo.cache.normalized.api.MemoryCacheFactory
-import com.apollographql.apollo.cache.normalized.api.NormalizedCache
-import com.apollographql.apollo.cache.normalized.apolloStore
-import com.apollographql.apollo.cache.normalized.fetchPolicy
-import com.apollographql.apollo.cache.normalized.normalizedCache
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.api.NormalizedCache
+import com.apollographql.cache.normalized.apolloStore
+import com.apollographql.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.memory.MemoryCacheFactory
 import com.apollographql.mockserver.MockServer
 import com.apollographql.mockserver.enqueueString
 import com.example.GetMessageQuery
 import com.example.SetMessageMutation
+import com.example.cache.Cache.cache
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class Test {
   @Test
@@ -19,7 +20,7 @@ class Test {
     val mockServer = MockServer()
     val apolloClient = ApolloClient.Builder()
       .serverUrl(mockServer.url())
-      .normalizedCache(MemoryCacheFactory(10 * 1024 * 1024))
+      .cache(MemoryCacheFactory(10 * 1024 * 1024))
       .build()
 
     mockServer.enqueueString(
@@ -44,9 +45,10 @@ class Test {
     println(NormalizedCache.prettifyDump(apolloClient.apolloStore.dump()))
 
     val queryResponse = apolloClient
-      .query(GetMessageQuery())
+      .query(GetMessageQuery("0"))
       .fetchPolicy(FetchPolicy.CacheOnly)
       .execute()
     println(queryResponse.data)
+    assertEquals(mutationResponse.data!!.setMessage!!.id, queryResponse.data!!.message!!.id)
   }
 }
