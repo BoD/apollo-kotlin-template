@@ -42,5 +42,7 @@ suspend fun main() {
   response = apolloClient.query(LaunchListQuery()).fetchPolicy(FetchPolicy.CacheOnly).execute()
   println(response.toFormattedString())
 
+  //println(response.data!!.launches.launches.first()!!.launch.isBooked)
+
   apolloClient.close()
 }
