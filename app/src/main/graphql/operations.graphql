@@ -1,51 +1,6 @@
-"""
-Launch list.
-"""
-query LaunchList {
-    launches {
-        cursor
-        hasMore
-        launches {
-            ...launch
-        }
-    }
-}
-
-"""
-Launch details.
-"""
-fragment launch on Launch {
-    id
-    site
-    mission {
+query UsersQuery {
+    users {
+        id
         name
-        missionPatch(size: SMALL)
-    }
-}
-
-mutation login {
-    login(email: "a@a.com") {
-        id
-    }
-}
-
-subscription TripsBooked {
-    tripsBooked
-}
-
-"""
-Set a message.
-"""
-mutation SetMessage($message: String) {
-    setMessage(message: $message) {
-        id
-        message
-    }
-}
-
-query GetMessage($messageId: ID!) {
-    message(id: $messageId) {
-        id
-        message
     }
 }
