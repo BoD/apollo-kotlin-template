@@ -11,7 +11,7 @@ version = "1.0.0-SNAPSHOT"
 
 dependencies {
   implementation("com.apollographql.apollo:apollo-runtime")
-  implementation("com.apollographql.cache:normalized-cache-sqlite:1.0.0-beta.1")
+  implementation("com.apollographql.cache:normalized-cache-sqlite:1.0.1")
 
   testImplementation(kotlin("test"))
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
@@ -19,7 +19,7 @@ dependencies {
 }
 
 apollo {
-  service("main") {
+  service("service") {
     packageName.set("com.example")
 
     introspection {
@@ -28,10 +28,10 @@ apollo {
     }
 
     @OptIn(ApolloExperimental::class)
-    plugin("com.apollographql.cache:normalized-cache-apollo-compiler-plugin:1.0.0-beta.1") {
+    plugin("com.apollographql.cache:normalized-cache-apollo-compiler-plugin:1.0.1") {
       argument("com.apollographql.cache.packageName", packageName.get())
     }
-//    plugin("com.apollographql.cache:normalized-cache-apollo-compiler-plugin:1.0.0-beta.1")
+//    plugin("com.apollographql.cache:normalized-cache-apollo-compiler-plugin:1.0.1")
 //    pluginArgument("com.apollographql.cache.packageName", packageName.get())
   }
 }
